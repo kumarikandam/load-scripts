@@ -12,8 +12,8 @@ yarn add @lemuria/load-scripts
 
 - [Table Of Contents](#table-of-contents)
 - [API](#api)
-- [`loadScripts(scripts: !Array<string>, callback: function(Error, !Array<!Event|string>=): void): void`](#loadscriptsscripts-arraystringcallback-functionerror-arrayeventstring-void-void)
-- [`loadJSON(url: string, callback: function(Error, string=): void): void`](#loadjsonurl-stringcallback-functionerror-string-void-void)
+- [`loadScripts(scripts, callback): void`](#loadscriptsscripts-arraystringcallback-functionerror-arrayeventstring-void-void)
+- [`loadJSON(url, callback): void`](#loadjsonurl-stringcallback-functionerror-string-void-void)
 - [Copyright](#copyright)
 
 <p align="center"><a href="#table-of-contents">

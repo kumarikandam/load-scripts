@@ -8,14 +8,14 @@ import loadScripts, { loadJson } from '@lemuria/load-scripts'
 
 %~%
 
-<typedef name="loadScripts">types/api.xml</typedef>
+<typedef name="loadScripts" noArgTypesInToc>types/api.xml</typedef>
 
 %EXAMPLE: example, ../src => @lemuria/load-scripts%
 <!-- %FORK example% -->
 
 %~%
 
-<typedef name="loadJSON">types/api.xml</typedef>
+<typedef name="loadJSON" noArgTypesInToc>types/api.xml</typedef>
 
 <!-- %EXAMPLE: example, ../src => @lemuria/load-scripts% -->
 <!-- %FORK example% -->
