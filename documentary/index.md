@@ -2,7 +2,7 @@
 
 %NPM: @lemuria/load-scripts%
 
-`@lemuria/load-scripts` is Loads Scritps And JSON With A Callback.
+`@lemuria/load-scripts` Loads Scripts And JSON With A Callback.
 
 ```sh
 yarn add @lemuria/load-scripts

@@ -1,8 +1,8 @@
 # @lemuria/load-scripts
 
-[![npm version](https://badge.fury.io/js/@lemuria/load-scripts.svg)](https://npmjs.org/package/@lemuria/load-scripts)
+[![npm version](https://badge.fury.io/js/%40lemuria%2Fload-scripts.svg)](https://www.npmjs.com/package/@lemuria/load-scripts)
 
-`@lemuria/load-scripts` is Loads Scritps And JSON With A Callback.
+`@lemuria/load-scripts` Loads Scripts And JSON With A Callback.
 
 ```sh
 yarn add @lemuria/load-scripts
@@ -12,8 +12,8 @@ yarn add @lemuria/load-scripts
 
 - [Table Of Contents](#table-of-contents)
 - [API](#api)
-- [`loadScripts(arg1: string, arg2?: boolean)`](#mynewpackagearg1-stringarg2-boolean-void)
-  * [`_@lemuria/load-scripts.Config`](#type-_@lemuria/load-scriptsconfig)
+- [`loadScripts(scripts: !Array<string>, callback: function(Error, !Array<!Event|string>=): void): void`](#loadscriptsscripts-arraystringcallback-functionerror-arrayeventstring-void-void)
+- [`loadJSON(url: string, callback: function(Error, string=): void): void`](#loadjsonurl-stringcallback-functionerror-string-void-void)
 - [Copyright](#copyright)
 
 <p align="center"><a href="#table-of-contents">
@@ -22,44 +22,50 @@ yarn add @lemuria/load-scripts
 
 ## API
 
-The package is available by importing its default function:
+The package is available by importing its default and named function:
 
 ```js
-import loadScripts from '@lemuria/load-scripts'
+import loadScripts, { loadJson } from '@lemuria/load-scripts'
 ```
 
 <p align="center"><a href="#table-of-contents">
   <img src="/.documentary/section-breaks/1.svg?sanitize=true">
 </a></p>
 
-## <code><ins>loadScripts</ins>(</code><sub><br/>&nbsp;&nbsp;`arg1: string,`<br/>&nbsp;&nbsp;`arg2?: boolean,`<br/></sub><code>): <i>void</i></code>
+## <code><ins>loadScripts</ins>(</code><sub><br/>&nbsp;&nbsp;`scripts: !Array<string>,`<br/>&nbsp;&nbsp;`callback: function(Error, !Array<!Event|string>=): void,`<br/></sub><code>): <i>void</i></code>
+Loads scripts by creating script elements, appending them to DOM and waiting for onload event. JSON is loaded via XHR. The callback will be called with an array of: event objects for scripts, and responseText for JSON.
 
-Call this function to get the result you want.
-
-<strong><a name="type-_@lemuria/load-scriptsconfig">`_@lemuria/load-scripts.Config`</a></strong>: Options for the program.
-
-|   Name    |       Type       |    Description    | Default |
-| --------- | ---------------- | ----------------- | ------- |
-| shouldRun | <em>boolean</em> | A boolean option. | `true`  |
-| __text*__ | <em>string</em>  | A text to return. | -       |
+ - <kbd><strong>scripts*</strong></kbd> <em><code>!Array&lt;string&gt;</code></em>: Path to scripts, including JSON.
+ - <kbd><strong>callback*</strong></kbd> <em><code>function(Error, !Array&lt;(!Event \| string)&gt;=): void</code></em>: The callback to execute when all data is loaded. In case of failure, called with the first error once.
 
 ```js
-/* alanode example/ */
 import loadScripts from '@lemuria/load-scripts'
 
-(async () => {
-  const res = await loadScripts({
-    text: 'example',
+document.body.onload = () => {
+  loadScripts([
+    'data.json',
+    'js/dep.js',
+    'js/dep2.js',
+  ], (err, res) => {
+    if (err) return console.warn(err.message)
+    const [data] = res
+    const parsed = JSON.parse(data)
+    console.log(parsed)
   })
-  console.log(res)
-})()
+}
 ```
-```
-example
-```
-
 <p align="center"><a href="#table-of-contents">
   <img src="/.documentary/section-breaks/2.svg?sanitize=true">
+</a></p>
+
+## <code><ins>loadJSON</ins>(</code><sub><br/>&nbsp;&nbsp;`url: string,`<br/>&nbsp;&nbsp;`callback: function(Error, string=): void,`<br/></sub><code>): <i>void</i></code>
+Loads JSON via XHR.
+
+ - <kbd><strong>url*</strong></kbd> <em>`string`</em>: The JSON url to load.
+ - <kbd><strong>callback*</strong></kbd> <em>`function(Error, string=): void`</em>: The callback when the server returned text and status 200.
+
+<p align="center"><a href="#table-of-contents">
+  <img src="/.documentary/section-breaks/3.svg?sanitize=true">
 </a></p>
 
 ## Copyright

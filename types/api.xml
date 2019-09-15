@@ -1,0 +1,21 @@
+<types namespace="_lemuria">
+  <method name="loadScripts">
+    <arg type="!Array<string>" name="scripts">
+      Path to scripts, including JSON.
+    </arg>
+    <arg type="function(Error, !Array<!Event|string>=): void" name="callback">
+      The callback to execute when all data is loaded. In case of failure, called with the first error once.
+    </arg>
+    Loads scripts by creating script elements, appending them to DOM and waiting for onload event. JSON is loaded via XHR. The callback will be called with an array of: event objects for scripts, and responseText for JSON.
+  </method>
+
+  <method name="loadJSON">
+    <arg string name="url">
+      The JSON url to load.
+    </arg>
+    <arg type="function(Error, string=): void" name="callback">
+      The callback when the server returned text and status 200.
+    </arg>
+    Loads JSON via XHR.
+  </method>
+</types>
