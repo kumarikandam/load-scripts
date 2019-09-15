@@ -1,8 +1,8 @@
 {
   "name": "@lemuria/load-scripts",
-  "version": "0.0.0-pre",
+  "version": "1.0.0",
   "description": "Loads Scripts And JSON With A Callback.",
-  "main": "build/index.js",
+  "main": "compile/index.js",
   "module": "src/index.js",
   "scripts": {
     "t": "zoroaster -a",
@@ -22,25 +22,29 @@
     "e": "alanode"
   },
   "files": [
-    "build",
-    "src",
-    "types/externs.js"
+    "compile",
+    "src"
   ],
-  "externs": "types/externs.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/kumarikandam/load-scripts.git"
   },
   "keywords": [
     "load-scripts",
-    "lemuria"
+    "lemuria",
+    "load",
+    "script",
+    "scripts",
+    "html",
+    "dependency",
+    "injection"
   ],
   "author": "Anton <anton@adc.sh>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/kumarikandam/load-scripts/issues"
   },
-  "homepage": "https://artd.eco",
+  "homepage": "https://www.artd.eco",
   "devDependencies": {
     "alamode": "^3.0.0",
     "documentary": "^1.33.2",
