@@ -14,6 +14,7 @@ yarn add @lemuria/load-scripts
 - [API](#api)
 - [`loadScripts(scripts, callback): void`](#loadscriptsscripts-arraystringcallback-functionerror-arrayeventstring-void-void)
 - [`loadJSON(url, callback): void`](#loadjsonurl-stringcallback-functionerror-string-void-void)
+- [`loadStyle(url, onload): void`](#loadstyleurl-stringonload-functionevent-event-void-void)
 - [Copyright](#copyright)
 
 <p align="center"><a href="#table-of-contents">
@@ -66,6 +67,16 @@ Loads JSON via XHR.
 
 <p align="center"><a href="#table-of-contents">
   <img src="/.documentary/section-breaks/3.svg?sanitize=true">
+</a></p>
+
+## <code><ins>loadStyle</ins>(</code><sub><br/>&nbsp;&nbsp;`url: string,`<br/>&nbsp;&nbsp;`onload: function(Event, Event=): void,`<br/></sub><code>): <i>void</i></code>
+Loads a style by creating the link element.
+
+ - <kbd><strong>url*</strong></kbd> <em>`string`</em>: The style url to load.
+ - <kbd><strong>onload*</strong></kbd> <em>`function(Event, Event=): void`</em>: The callback when the `onload` or `onerror` even was fired on the link, with the first arg being the error event.
+
+<p align="center"><a href="#table-of-contents">
+  <img src="/.documentary/section-breaks/4.svg?sanitize=true">
 </a></p>
 
 ## Copyright

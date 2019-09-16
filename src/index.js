@@ -9,13 +9,27 @@ export const loadJSON = (url, onload) => {
   const xmlhttp = new XMLHttpRequest()
 
   xmlhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      onload(null, this.responseText)
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+      onload(null, xmlhttp.responseText)
     }
   }
   xmlhttp.onerror = (err) => onload(err)
   xmlhttp.open('GET', url, true)
   xmlhttp.send()
+}
+
+/**
+ * Loads a style by creating the link element.
+ * @param {string} url The style url to load.
+ * @param {function(Event, Event=): void} onload The callback when the `onload` or `onerror` even was fired on the link, with the first arg being the error event.
+ */
+export const loadStyle = (url, onload) => {
+  const link = document.createElement('link')
+  link.rel = 'stylesheet'
+  link.href = url
+  link.onload = (ev) => onload(null, ev)
+  link.onerror = (ev) => onload(ev)
+  document.head.appendChild(link)
 }
 
 /**

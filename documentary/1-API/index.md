@@ -21,3 +21,7 @@ import loadScripts, { loadJson } from '@lemuria/load-scripts'
 <!-- %FORK example% -->
 
 %~%
+
+<typedef name="loadStyle" noArgTypesInToc>types/api.xml</typedef>
+
+%~%

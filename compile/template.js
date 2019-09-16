@@ -1,4 +1,4 @@
-const { _loadScripts, _loadJSON } = require('./depack')
+const { _loadScripts, _loadJSON, _loadStyle } = require('./depack')
 
 /**
  * @methodType {_lemuria.loadScripts}
@@ -14,5 +14,13 @@ function loadJSON(url, onload) {
   return _loadJSON(url, onload)
 }
 
+/**
+ * @methodType {_lemuria.loadStyle}
+ */
+function loadStyle(url, onload) {
+  return _loadStyle(url, onload)
+}
+
 module.exports = loadScripts
 module.exports.loadJSON = loadJSON
+module.exports.loadStyle = loadStyle

@@ -18,4 +18,14 @@
     </arg>
     Loads JSON via XHR.
   </method>
+
+  <method name="loadStyle">
+    <arg string name="url">
+      The style url to load.
+    </arg>
+    <arg type="function(Event, Event=): void" name="onload">
+      The callback when the `onload` or `onerror` even was fired on the link, with the first arg being the error event.
+    </arg>
+    Loads a style by creating the link element.
+  </method>
 </types>

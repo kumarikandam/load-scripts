@@ -1,24 +1,24 @@
 'use strict';
-const h = (d, c) => {
+const h = (e, b) => {
   const a = new XMLHttpRequest;
   a.onreadystatechange = function() {
-    4 == this.readyState && 200 == this.status && c(null, this.responseText);
+    4 == a.readyState && 200 == a.status && b(null, a.responseText);
   };
-  a.onerror = e => c(e);
-  a.open("GET", d, !0);
+  a.onerror = c => b(c);
+  a.open("GET", e, !0);
   a.send();
 };
-module.exports = {_loadScripts:function(d, c) {
-  let a = !1, e = [], k = 0;
-  d.forEach((g, n) => {
-    const l = b => {
-      a || (k++, e[n] = b, k == d.length && c(null, e));
-    }, m = b => {
-      a || (a = b, c(b));
+module.exports = {_loadScripts:function(e, b) {
+  let a = !1, c = [], k = 0;
+  e.forEach((g, n) => {
+    const l = d => {
+      a || (k++, c[n] = d, k == e.length && b(null, c));
+    }, m = d => {
+      a || (a = d, b(d));
     };
     if (g.endsWith(".json")) {
-      h(g, (b, p) => {
-        b ? m(b) : l(p);
+      h(g, (d, p) => {
+        d ? m(d) : l(p);
       });
     } else {
       var f = document.createElement("script");
@@ -28,7 +28,14 @@ module.exports = {_loadScripts:function(d, c) {
       (document.head || document.body).appendChild(f);
     }
   });
-}, _loadJSON:h};
+}, _loadJSON:h, _loadStyle:(e, b) => {
+  const a = document.createElement("link");
+  a.rel = "stylesheet";
+  a.href = e;
+  a.onload = c => b(null, c);
+  a.onerror = c => b(c);
+  document.head.appendChild(a);
+}};
 
 
 //# sourceMappingURL=depack.js.map

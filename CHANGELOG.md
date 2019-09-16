@@ -1,3 +1,10 @@
+## 17 September 2019
+
+### [1.1.0](https://github.com/kumarikandam/load-scripts/compare/v1.0.0...v1.1.0)
+
+- [feature] Add the `loadStyle` method.
+- [compile] Remove compiler warnings about _XHR_.
+
 ## 15 September 2019
 
 ### [1.0.0](https://github.com/kumarikandam/load-scripts/compare/v0.0.0-pre...v1.0.0)

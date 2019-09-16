@@ -1,4 +1,4 @@
-const { _loadScripts, _loadJSON } = require('./depack')
+const { _loadScripts, _loadJSON, _loadStyle } = require('./depack')
 
 /**
  * Loads scripts by creating script elements, appending them to DOM and waiting for onload event. JSON is loaded via XHR. The callback will be called with an array of: event objects for scripts, and responseText for JSON.
@@ -18,5 +18,15 @@ function loadJSON(url, onload) {
   return _loadJSON(url, onload)
 }
 
+/**
+ * Loads a style by creating the link element.
+ * @param {string} url The style url to load.
+ * @param {function(Event, Event=): void} onload The callback when the `onload` or `onerror` even was fired on the link, with the first arg being the error event.
+ */
+function loadStyle(url, onload) {
+  return _loadStyle(url, onload)
+}
+
 module.exports = loadScripts
 module.exports.loadJSON = loadJSON
+module.exports.loadStyle = loadStyle
