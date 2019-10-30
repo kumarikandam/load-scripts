@@ -1,3 +1,9 @@
+## 30 October 2019
+
+### [1.2.0](https://github.com/kumarikandam/load-scripts/compare/v1.1.0...v1.2.0)
+
+- [feature] Add cache for scripts and styles.
+
 ## 17 September 2019
 
 ### [1.1.0](https://github.com/kumarikandam/load-scripts/compare/v1.0.0...v1.1.0)
