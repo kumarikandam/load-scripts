@@ -1,76 +1,89 @@
 'use strict';
-const h = (c, d) => {
-  const b = new XMLHttpRequest;
-  b.onreadystatechange = function() {
-    4 == b.readyState && 200 == b.status && d(null, b.responseText);
-  };
-  b.onerror = a => d(a);
-  b.open("GET", c, !0);
-  b.send();
-}, k = {}, p = (c, d, b) => {
-  var a = c.f ? null : k[c];
-  if (a && a.loaded) {
-    d(a.loaded);
-  } else {
-    if (a && a.a) {
-      b(a.a);
-    } else {
-      if (a) {
-        a.c.push(d), a.b.push(b);
-      } else {
-        a = document.createElement("script");
-        a.src = c;
-        const g = new n(d, b);
-        k[c] = g;
-        a.onload = e => {
-          g.load(e);
-        };
-        a.onerror = e => {
-          g.error(e);
-        };
-        (document.head || document.body).appendChild(a);
-      }
-    }
-  }
-};
-class n {
-  constructor(c, d) {
+class l {
+  constructor(b, c) {
     this.loaded = this.a = null;
-    this.c = [c];
-    this.b = [d];
+    this.c = [b];
+    this.b = [c];
   }
-  error(c) {
-    this.a = c;
-    this.b.forEach(d => {
-      d(c);
+  error(b) {
+    this.a = b;
+    this.b.forEach(c => {
+      c(b);
     });
   }
-  load(c) {
-    this.loaded = c;
-    this.c.forEach(d => {
-      d(c);
+  load(b) {
+    this.loaded = b;
+    this.c.forEach(c => {
+      c(b);
     });
   }
 }
-;module.exports = {_loadScripts:function(c, d) {
-  let b = !1, a = [], g = 0;
-  c.forEach((e, q) => {
-    const l = f => {
-      b || (g++, a[q] = f, g == c.length && d(null, a));
-    }, m = f => {
-      b || (b = f, d(f));
+;const m = (b, c, a) => {
+  const d = document.createElement("script");
+  d.src = b;
+  d.onload = c;
+  d.onerror = a;
+  (document.head || document.body).appendChild(d);
+}, n = (b, c, a) => {
+  const d = document.createElement("link");
+  d.rel = "stylesheet";
+  d.href = b;
+  d.onload = c;
+  d.onerror = a;
+  (document.head || document.body).appendChild(d);
+};
+const p = (b, c) => {
+  const a = new XMLHttpRequest;
+  a.onreadystatechange = function() {
+    4 == a.readyState && 200 == a.status && c(null, a.responseText);
+  };
+  a.onerror = d => c(d);
+  a.open("GET", b, !0);
+  a.send();
+};
+function r(b, c, a, d, e, h) {
+  if (h) {
+    c(b, d, e);
+  } else {
+    if (a && a.loaded) {
+      d(a.loaded);
+    } else {
+      if (a && a.a) {
+        e(a.a);
+      } else {
+        if (a) {
+          a.c.push(d), a.b.push(e);
+        } else {
+          const k = new l(d, e);
+          c(b, g => {
+            k.load(g);
+          }, g => {
+            k.error(g);
+          });
+          return k;
+        }
+      }
+    }
+  }
+}
+const t = {}, u = {}, v = (b, c, a) => {
+  (c = r(b, m, t[b], c, a, b.nocache)) && (t[b] = c);
+};
+module.exports = {_loadScripts:function(b, c) {
+  let a = !1, d = [], e = 0;
+  b.forEach((h, k) => {
+    const g = f => {
+      a || (e++, d[k] = f, e == b.length && c(null, d));
+    }, q = f => {
+      a || (a = f, c(f));
     };
-    e.endsWith(".json") ? h(e, (f, r) => {
-      f ? m(f) : l(r);
-    }) : p(e, l, m);
+    h.endsWith(".json") ? p(h, (f, w) => {
+      f ? q(f) : g(w);
+    }) : v(h, g, q);
   });
-}, _loadJSON:h, _loadStyle:(c, d) => {
-  const b = document.createElement("link");
-  b.rel = "stylesheet";
-  b.href = c;
-  b.onload = a => d(null, a);
-  b.onerror = a => d(a);
-  document.head.appendChild(b);
+}, _loadJSON:p, _loadStyle:(b, c) => {
+  const a = r(b, n, u[b], d => c(null, d), d => c(d), b.nocache);
+  a && (u[b] = a);
 }};
 
 

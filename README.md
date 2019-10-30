@@ -26,8 +26,10 @@ yarn add @lemuria/load-scripts
 The package is available by importing its default and named function:
 
 ```js
-import loadScripts, { loadJson } from '@lemuria/load-scripts'
+import loadScripts, { loadJson, loadStyle } from '@lemuria/load-scripts'
 ```
+
+Scripts and styles will be injected using the `script` and `link` elements. The results are cached, and resources won't be loaded more than once. To load them without cache, the `nocache` property should be set on the `src` string, e.g., `const src = 'test.js'; src.nocache = true`, or using a cache buster: `test.js?random-string`.
 
 <p align="center"><a href="#table-of-contents">
   <img src="/.documentary/section-breaks/1.svg?sanitize=true">

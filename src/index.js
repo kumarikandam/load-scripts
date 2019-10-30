@@ -1,3 +1,6 @@
+import CacheItem from './Cache'
+import { injectStyle, injectScript } from './inject'
+
 /* eslint-env browser */
 
 /**
@@ -24,12 +27,41 @@ export const loadJSON = (url, onload) => {
  * @param {function(Event, Event=): void} onload The callback when the `onload` or `onerror` even was fired on the link, with the first arg being the error event.
  */
 export const loadStyle = (url, onload) => {
-  const link = document.createElement('link')
-  link.rel = 'stylesheet'
-  link.href = url
-  link.onload = (ev) => onload(null, ev)
-  link.onerror = (ev) => onload(ev)
-  document.head.appendChild(link)
+  const cache = /** @type {CacheItem} */ (STYLES[url])
+  const onLoad = (ev) => onload(null, ev)
+  const onError = (ev) => onload(ev)
+
+  const c = abstractLoader(url, injectStyle, cache, onLoad, onError, url['nocache'])
+  if (c) STYLES[url] = c
+}
+
+/**
+ * @param {string} url The URL to load.
+ * @param {function(string, !Function, !Function)} loader The function to load URL with.
+ * @param {CacheItem} cache The cache item, if exists.
+ * @param {!Function} onLoad Callback on load.
+ * @param {!Function} onError Callback on error.
+ * @param {boolean} [nocache] Whether cache should be skipped.
+ */
+function abstractLoader(url, loader, cache, onLoad, onError, nocache) {
+  if (nocache) {
+    loader(url, onLoad, onError)
+  } else if (cache && cache.loaded) {
+    onLoad(cache.loaded)
+  } else if (cache && cache.errored) {
+    onError(cache.errored)
+  } else if (cache) {
+    cache.addOnLoad(onLoad)
+    cache.addOnError(onError)
+  } else {
+    const ci = new CacheItem(onLoad, onError)
+    loader(url, (ev) => {
+      ci.load(ev)
+    }, (ev) => {
+      ci.error(ev)
+    })
+    return ci
+  }
 }
 
 /**
@@ -63,6 +95,7 @@ export default function loadScripts(scripts, callback) {
 }
 
 const SCRIPTS = {}
+const STYLES = {}
 
 /**
  * Loads script accounting for cache.
@@ -73,93 +106,6 @@ const SCRIPTS = {}
 const loadScript = (src, onLoad, onError) => {
   const cache = /** @type {CacheItem} */ (SCRIPTS[src])
 
-  if (src['nocache']) {
-    injectScript(src, onLoad, onError)
-  } else if (cache && cache.loaded) {
-    onLoad(cache.loaded)
-  } else if (cache && cache.errored) {
-    onError(cache.errored)
-  } else if (cache) {
-    cache.addOnLoad(onLoad)
-    cache.addOnError(onError)
-  } else {
-    const ci = new CacheItem(onLoad, onError)
-    SCRIPTS[src] = ci
-    injectScript(src, (ev) => {
-      ci.load(ev)
-    }, (ev) => {
-      ci.error(ev)
-    })
-  }
+  const c = abstractLoader(src, injectScript, cache, onLoad, onError, src['nocache'])
+  if (c) SCRIPTS[src] = c
 }
-
-/**
- * Creates a script tag and appends into DOM.
- * @param {string} src
- * @param {!Function} onLoad
- * @param {!Function} onError
- */
-const injectScript = (src, onLoad, onError) => {
-  const script = document.createElement('script')
-  script.src = src
-  script.onload = onLoad
-  script.onerror = onError
-  ;(document.head || document.body).appendChild(script)
-}
-
-class CacheItem {
-  /**
-   * Creates a cache iterm with given inital listeners, and allows to add more listeners.
-   * The listeners are called when `load` and `error` methods are fired on this instance.
-   * @param {!Function} onLoad
-   * @param {!Function} onError
-   */
-  constructor(onLoad, onError) {
-    /**
-     * @type {Event}
-     */
-    this.errored = null
-    /**
-     * @type {Event}
-     */
-    this.loaded = null
-    this.onloads = [onLoad]
-    this.onerrors = [onError]
-  }
-  /**
-   * Adds an onload listener.
-   * @param {!Function} onLoad
-   */
-  addOnLoad(onLoad) {
-    this.onloads.push(onLoad)
-  }
-  /**
-   * Adds an onerror listener.
-   * @param {!Function} onError
-   */
-  addOnError(onError) {
-    this.onerrors.push(onError)
-  }
-  /**
-   * @param {Event} ev
-   */
-  error(ev) {
-    this.errored = ev
-    this.onerrors.forEach((oe) => {
-      oe(ev)
-    })
-  }
-  /**
-   * @param {Event} ev
-   */
-  load(ev) {
-    this.loaded = ev
-    this.onloads.forEach((ol) => {
-      ol(ev)
-    })
-  }
-}
-
-// const abstractLoad = () => {
-
-// }
