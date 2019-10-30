@@ -40,28 +40,126 @@ export const loadStyle = (url, onload) => {
 export default function loadScripts(scripts, callback) {
   let error = false, loaded = [], l = 0
   scripts.forEach((src, i) => {
-    const onload = (res) => {
+    const onLoad = (res) => {
       if (error) return
       l++
       loaded[i] = res
       if (l == scripts.length) callback(null, loaded)
     }
-    const onerror = (err) => {
+    const onError = (err) => {
       if (error) return
       error = err
       callback(err)
     }
     if (src.endsWith('.json')) {
       loadJSON(src, (err, result) => {
-        if (err) onerror(err)
-        else onload(result)
+        if (err) onError(err)
+        else onLoad(result)
       })
       return
     }
-    const script = document.createElement('script')
-    script.src = src
-    script.onload = onload
-    script.onerror = onerror
-    ;(document.head || document.body).appendChild(script)
+    loadScript(src, onLoad, onError)
   })
 }
+
+const SCRIPTS = {}
+
+/**
+ * Loads script accounting for cache.
+ * @param {string} src
+ * @param {!Function} onLoad
+ * @param {!Function} onError
+ */
+const loadScript = (src, onLoad, onError) => {
+  const cache = /** @type {CacheItem} */ (SCRIPTS[src])
+
+  if (src['nocache']) {
+    injectScript(src, onLoad, onError)
+  } else if (cache && cache.loaded) {
+    onLoad(cache.loaded)
+  } else if (cache && cache.errored) {
+    onError(cache.errored)
+  } else if (cache) {
+    cache.addOnLoad(onLoad)
+    cache.addOnError(onError)
+  } else {
+    const ci = new CacheItem(onLoad, onError)
+    SCRIPTS[src] = ci
+    injectScript(src, (ev) => {
+      ci.load(ev)
+    }, (ev) => {
+      ci.error(ev)
+    })
+  }
+}
+
+/**
+ * Creates a script tag and appends into DOM.
+ * @param {string} src
+ * @param {!Function} onLoad
+ * @param {!Function} onError
+ */
+const injectScript = (src, onLoad, onError) => {
+  const script = document.createElement('script')
+  script.src = src
+  script.onload = onLoad
+  script.onerror = onError
+  ;(document.head || document.body).appendChild(script)
+}
+
+class CacheItem {
+  /**
+   * Creates a cache iterm with given inital listeners, and allows to add more listeners.
+   * The listeners are called when `load` and `error` methods are fired on this instance.
+   * @param {!Function} onLoad
+   * @param {!Function} onError
+   */
+  constructor(onLoad, onError) {
+    /**
+     * @type {Event}
+     */
+    this.errored = null
+    /**
+     * @type {Event}
+     */
+    this.loaded = null
+    this.onloads = [onLoad]
+    this.onerrors = [onError]
+  }
+  /**
+   * Adds an onload listener.
+   * @param {!Function} onLoad
+   */
+  addOnLoad(onLoad) {
+    this.onloads.push(onLoad)
+  }
+  /**
+   * Adds an onerror listener.
+   * @param {!Function} onError
+   */
+  addOnError(onError) {
+    this.onerrors.push(onError)
+  }
+  /**
+   * @param {Event} ev
+   */
+  error(ev) {
+    this.errored = ev
+    this.onerrors.forEach((oe) => {
+      oe(ev)
+    })
+  }
+  /**
+   * @param {Event} ev
+   */
+  load(ev) {
+    this.loaded = ev
+    this.onloads.forEach((ol) => {
+      ol(ev)
+    })
+  }
+}
+
+// const abstractLoad = () => {
+
+// }

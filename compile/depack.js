@@ -1,40 +1,76 @@
 'use strict';
-const h = (e, b) => {
-  const a = new XMLHttpRequest;
-  a.onreadystatechange = function() {
-    4 == a.readyState && 200 == a.status && b(null, a.responseText);
+const h = (c, d) => {
+  const b = new XMLHttpRequest;
+  b.onreadystatechange = function() {
+    4 == b.readyState && 200 == b.status && d(null, b.responseText);
   };
-  a.onerror = c => b(c);
-  a.open("GET", e, !0);
-  a.send();
-};
-module.exports = {_loadScripts:function(e, b) {
-  let a = !1, c = [], k = 0;
-  e.forEach((g, n) => {
-    const l = d => {
-      a || (k++, c[n] = d, k == e.length && b(null, c));
-    }, m = d => {
-      a || (a = d, b(d));
-    };
-    if (g.endsWith(".json")) {
-      h(g, (d, p) => {
-        d ? m(d) : l(p);
-      });
+  b.onerror = a => d(a);
+  b.open("GET", c, !0);
+  b.send();
+}, k = {}, p = (c, d, b) => {
+  var a = c.f ? null : k[c];
+  if (a && a.loaded) {
+    d(a.loaded);
+  } else {
+    if (a && a.a) {
+      b(a.a);
     } else {
-      var f = document.createElement("script");
-      f.src = g;
-      f.onload = l;
-      f.onerror = m;
-      (document.head || document.body).appendChild(f);
+      if (a) {
+        a.c.push(d), a.b.push(b);
+      } else {
+        a = document.createElement("script");
+        a.src = c;
+        const g = new n(d, b);
+        k[c] = g;
+        a.onload = e => {
+          g.load(e);
+        };
+        a.onerror = e => {
+          g.error(e);
+        };
+        (document.head || document.body).appendChild(a);
+      }
     }
+  }
+};
+class n {
+  constructor(c, d) {
+    this.loaded = this.a = null;
+    this.c = [c];
+    this.b = [d];
+  }
+  error(c) {
+    this.a = c;
+    this.b.forEach(d => {
+      d(c);
+    });
+  }
+  load(c) {
+    this.loaded = c;
+    this.c.forEach(d => {
+      d(c);
+    });
+  }
+}
+;module.exports = {_loadScripts:function(c, d) {
+  let b = !1, a = [], g = 0;
+  c.forEach((e, q) => {
+    const l = f => {
+      b || (g++, a[q] = f, g == c.length && d(null, a));
+    }, m = f => {
+      b || (b = f, d(f));
+    };
+    e.endsWith(".json") ? h(e, (f, r) => {
+      f ? m(f) : l(r);
+    }) : p(e, l, m);
   });
-}, _loadJSON:h, _loadStyle:(e, b) => {
-  const a = document.createElement("link");
-  a.rel = "stylesheet";
-  a.href = e;
-  a.onload = c => b(null, c);
-  a.onerror = c => b(c);
-  document.head.appendChild(a);
+}, _loadJSON:h, _loadStyle:(c, d) => {
+  const b = document.createElement("link");
+  b.rel = "stylesheet";
+  b.href = c;
+  b.onload = a => d(null, a);
+  b.onerror = a => d(a);
+  document.head.appendChild(b);
 }};
 
 
